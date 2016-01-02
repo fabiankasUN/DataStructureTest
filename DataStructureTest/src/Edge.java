@@ -1,0 +1,33 @@
+
+public class Edge {
+
+	private int v;
+	private int w;
+
+	public Edge( int v, int w ) {
+		this.v = v;
+		this.w = w;
+	}
+
+	public Edge( int v ) {
+		this.v = v;
+		this.w = 0;
+	}
+
+	public int getV() {
+		return v;
+	}
+
+	public void setV( int v ) {
+		this.v = v;
+	}
+
+	public int getW() {
+		return w;
+	}
+
+	public void setW( int w ) {
+		this.w = w;
+	}
+
+}

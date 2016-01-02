@@ -25,12 +25,12 @@ public class Generator {
 	 *         generator's sequence
 	 * 
 	 */
-	public int getInt(int min, int max) {
-		if (min < 0)
+	public int getInt( int min, int max ) {
+		if ( min < 0 )
 			throw new IllegalArgumentException("min should be greater or equal to 0");
-		if (max < 0)
+		if ( max < 0 )
 			throw new IllegalArgumentException("max should be greater or equal to 0");
-		if (min >= max)
+		if ( min >= max )
 			throw new IllegalArgumentException("min should be less than max");
 		return r.nextInt(max - min) + min;
 	}
@@ -44,25 +44,25 @@ public class Generator {
 	 *            The number of numbers that be created
 	 * @return A list with b - a different numbers
 	 */
-	public ArrayList<Integer> notRepeatListInt(int min, int max, int size) {
-		if (min < 0)
+	public ArrayList<Integer> notRepeatListInt( int min, int max, int size ) {
+		if ( min < 0 )
 			throw new IllegalArgumentException("min should be greater or equal to 0");
-		if (max < 0)
+		if ( max < 0 )
 			throw new IllegalArgumentException("max should be greater or equal to 0");
-		if (min >= max)
+		if ( min >= max )
 			throw new IllegalArgumentException("min should be less than max");
-		if (size > max - min)
+		if ( size > max - min )
 			throw new RepeatedNumberException();
 		int n;
 		HashSet<Integer> set = new HashSet<Integer>();
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		do {
 			n = r.nextInt(max - min) + min;
-			if (!set.contains(n)) {
+			if ( !set.contains(n) ) {
 				set.add(n);
 				list.add(n);
 			}
-		} while (set.contains(n) && set.size() < size);
+		} while ( set.contains(n) && set.size() < size );
 		return list;
 	}
 
@@ -72,15 +72,15 @@ public class Generator {
 	 * @param size
 	 * @return
 	 */
-	public ArrayList<Integer> repeatListInt(int min, int max, int size) {
-		if (min < 0)
+	public ArrayList<Integer> repeatListInt( int min, int max, int size ) {
+		if ( min < 0 )
 			throw new IllegalArgumentException("min should be greater or equal to 0");
-		if (max < 0)
+		if ( max < 0 )
 			throw new IllegalArgumentException("max should be greater or equal to 0");
-		if (min >= max)
+		if ( min >= max )
 			throw new IllegalArgumentException("min should be less than max");
 		ArrayList<Integer> list = new ArrayList<Integer>();
-		for (int i = 0; i < size; i++) {
+		for ( int i = 0; i < size; i++ ) {
 			list.add(r.nextInt(max - min) + min);
 		}
 		return list;
@@ -90,18 +90,33 @@ public class Generator {
 	 * @param list
 	 * @return
 	 */
-	public int selectRandomItem(ArrayList<Integer> list) {
-		if (list.size() == 0)
+	public int selectRandomItemInt( ArrayList<Integer> list ) {
+		if ( list.size() == 0 )
 			throw new EmptyListException();
 		return list.get(r.nextInt(list.size()));
+	}
+
+	/**
+	 * @param size
+	 * @param list
+	 * @return
+	 */
+	public ArrayList<Integer> selectRandomItemsInt( int size, ArrayList<Integer> list ) {
+		if ( list.size() == 0 )
+			throw new EmptyListException();
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		for ( int i = 0; i < size; i++ ) {
+			res.add(selectRandomItemInt(list));
+		}
+		return res;
 	}
 
 	/**
 	 * @param list
 	 * @return
 	 */
-	public String selectRandomItemString(ArrayList<String> list) {
-		if (list.size() == 0)
+	public String selectRandomItemString( ArrayList<String> list ) {
+		if ( list.size() == 0 )
 			throw new EmptyListException();
 		return list.get(r.nextInt(list.size()));
 	}
@@ -111,12 +126,12 @@ public class Generator {
 	 * @param usedLetters
 	 * @return
 	 */
-	public String makeString(int size, int usedLetters) {
-		if (size == 0 || usedLetters == 0)
+	public String makeString( int size, int usedLetters ) {
+		if ( size == 0 || usedLetters == 0 )
 			throw new IllegalArgumentException();
 		String s = "";
-		for (int i = 0; i < size; i++) {
-			s += (char) (r.nextInt(usedLetters) + 'a');
+		for ( int i = 0; i < size; i++ ) {
+			s += (char) ( r.nextInt(usedLetters) + 'a' );
 		}
 		return s;
 	}
@@ -127,15 +142,15 @@ public class Generator {
 	 * @param sizeList
 	 * @return
 	 */
-	public ArrayList<String> notRepeatListString(int sizeCad, int usedLetters, int sizeList) {
-		if (sizeCad == 0 || usedLetters == 0)
+	public ArrayList<String> notRepeatListString( int sizeCad, int usedLetters, int sizeList ) {
+		if ( sizeCad == 0 || usedLetters == 0 )
 			throw new IllegalArgumentException();
 		ArrayList<String> list = new ArrayList<String>();
 		HashSet<String> set = new HashSet<>();
 		String temp;
-		for (int i = 0; i < sizeList; i++) {
+		for ( int i = 0; i < sizeList; i++ ) {
 			temp = makeString(sizeCad, usedLetters);
-			if (set.contains(temp)) {
+			if ( set.contains(temp) ) {
 				i--;
 			} else {
 				list.add(temp);
@@ -148,10 +163,10 @@ public class Generator {
 	 * @param v
 	 * @return
 	 */
-	private ArrayList<Integer>[] makeGraph(int v) {
-		ArrayList<Integer>[] g = new ArrayList[v];
-		for (int i = 0; i < v; i++) {
-			g[i] = new ArrayList<Integer>();
+	private ArrayList<Edge>[] makeGraph( int v ) {
+		ArrayList<Edge>[] g = new ArrayList[v];
+		for ( int i = 0; i < v; i++ ) {
+			g[i] = new ArrayList<Edge>();
 		}
 		return g;
 	}
@@ -161,25 +176,24 @@ public class Generator {
 	 * @param e
 	 * @return
 	 */
-	public ArrayList<Integer>[] DG(int v, int e) {
-		if (v == 0)
+	public ArrayList<Edge>[] unweightedDG( int v, int e ) {
+		if ( v == 0 )
 			throw new IllegalArgumentException();
-		if (e > v * v && v > 1)
+		if ( e > v * v && v > 1 )
 			throw new MakeGraphException("E should be less or equal than v*v");
-		if (v == 1 && e > 0)
+		if ( v == 1 && e > 0 )
 			throw new MakeGraphException("E should be 0 because v is 1");
 
-		ArrayList<Integer>[] graph = makeGraph(v);
+		ArrayList<Edge>[] graph = makeGraph(v);
 		HashSet<String> set = new HashSet<String>();
 		int a, b;
-		int k = 0;
-		while (k < e) {
+		while ( e > 0 ) {
 			a = r.nextInt(v);
 			b = r.nextInt(v);
-			if (!set.contains(a + " " + b)) {
+			if ( !set.contains(a + " " + b) && a != b ) {
 				set.add(a + " " + b);
-				graph[a].add(b);
-				k++;
+				graph[a].add(new Edge(b));
+				e--;
 			}
 		}
 		return graph;
