@@ -35,6 +35,21 @@ public class Generator {
 		return r.nextInt(max - min) + min;
 	}
 
+	public int getNegativeInt( int min, int max ) {
+		if ( min >= max )
+			throw new IllegalArgumentException("min should be less than max");
+		if ( min < 0 && max < 0 ) {
+			return -getInt(-min, -max);
+		}
+		if ( min <= 0 && max > 0 ) {
+			return getInt(0, -min + max) + min;
+		}
+		if ( min >= 0 && max > 0 ) {
+			return getInt(min, max);
+		}
+		throw new IllegalArgumentException("Case not found");
+	}
+
 	/**
 	 * @param min
 	 *            the lower bound (inclusive). Must be positive.
@@ -198,5 +213,29 @@ public class Generator {
 		}
 		return graph;
 	}
+
+	/**
+	 * @param v
+	 * @param e
+	 * @param maxWeight
+	 * @param negativeWeight
+	 * @return
+	 */
+	public ArrayList<Edge>[] weightedDG( int v, int e, int maxWeight, boolean negativeWeight ) {
+		ArrayList<Edge>[] graph = unweightedDG(v, e);
+		for ( int i = 0; i < v; i++ ) {
+			for ( int j = 0; j < graph[i].size(); i++ ) {
+				if( negativeWeight )
+					graph[i].get(j).setW(getNegativeInt(-maxWeight, maxWeight));
+				else
+					graph[i].get(j).setW(getInt(0, maxWeight));
+			}
+		}
+		return graph;
+	}
+	
+	
+	
+	
 
 }
