@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
-public class Generator {
+public class Generator implements IGeneratorData, IGraph {
 
 	private Random r = new Random();
 
@@ -25,6 +25,7 @@ public class Generator {
 	 *         generator's sequence
 	 * 
 	 */
+	@Override
 	public int getInt( int min, int max ) {
 		if ( min < 0 )
 			throw new IllegalArgumentException("min should be greater or equal to 0");
@@ -35,6 +36,7 @@ public class Generator {
 		return r.nextInt(max - min) + min;
 	}
 
+	@Override
 	public int getNegativeInt( int min, int max ) {
 		if ( min >= max )
 			throw new IllegalArgumentException("min should be less than max");
@@ -59,6 +61,7 @@ public class Generator {
 	 *            The number of numbers that be created
 	 * @return A list with b - a different numbers
 	 */
+	@Override
 	public ArrayList<Integer> notRepeatListInt( int min, int max, int size ) {
 		if ( min < 0 )
 			throw new IllegalArgumentException("min should be greater or equal to 0");
@@ -87,6 +90,7 @@ public class Generator {
 	 * @param size
 	 * @return
 	 */
+	@Override
 	public ArrayList<Integer> repeatListInt( int min, int max, int size ) {
 		if ( min < 0 )
 			throw new IllegalArgumentException("min should be greater or equal to 0");
@@ -105,6 +109,7 @@ public class Generator {
 	 * @param list
 	 * @return
 	 */
+	@Override
 	public int selectRandomItemInt( ArrayList<Integer> list ) {
 		if ( list.size() == 0 )
 			throw new EmptyListException();
@@ -116,6 +121,7 @@ public class Generator {
 	 * @param list
 	 * @return
 	 */
+	@Override
 	public ArrayList<Integer> selectRandomItemsInt( int size, ArrayList<Integer> list ) {
 		if ( list.size() == 0 )
 			throw new EmptyListException();
@@ -130,6 +136,7 @@ public class Generator {
 	 * @param list
 	 * @return
 	 */
+	@Override
 	public String selectRandomItemString( ArrayList<String> list ) {
 		if ( list.size() == 0 )
 			throw new EmptyListException();
@@ -141,6 +148,7 @@ public class Generator {
 	 * @param usedLetters
 	 * @return
 	 */
+	@Override
 	public String makeString( int size, int usedLetters ) {
 		if ( size == 0 || usedLetters == 0 )
 			throw new IllegalArgumentException();
@@ -157,6 +165,7 @@ public class Generator {
 	 * @param sizeList
 	 * @return
 	 */
+	@Override
 	public ArrayList<String> notRepeatListString( int sizeCad, int usedLetters, int sizeList ) {
 		if ( sizeCad == 0 || usedLetters == 0 )
 			throw new IllegalArgumentException();
@@ -178,6 +187,7 @@ public class Generator {
 	 * @param v
 	 * @return
 	 */
+
 	private ArrayList<Edge>[] makeGraph( int v ) {
 		ArrayList<Edge>[] g = new ArrayList[v];
 		for ( int i = 0; i < v; i++ ) {
@@ -191,10 +201,11 @@ public class Generator {
 	 * @param e
 	 * @return
 	 */
-	public ArrayList<Edge>[] unweightedDG( int v, int e ) {
+	@Override
+	public ArrayList<Edge>[] unweightedDirectedGraph( int v, int e ) {
 		if ( v == 0 )
 			throw new IllegalArgumentException();
-		if ( e > v * v && v > 1 )
+		if ( e > ( v - 1 ) * v && v > 1 )
 			throw new MakeGraphException("E should be less or equal than v*v");
 		if ( v == 1 && e > 0 )
 			throw new MakeGraphException("E should be 0 because v is 1");
@@ -221,11 +232,12 @@ public class Generator {
 	 * @param negativeWeight
 	 * @return
 	 */
-	public ArrayList<Edge>[] weightedDG( int v, int e, int maxWeight, boolean negativeWeight ) {
-		ArrayList<Edge>[] graph = unweightedDG(v, e);
+	@Override
+	public ArrayList<Edge>[] weightedDirectedGraph( int v, int e, int maxWeight, boolean negativeWeight ) {
+		ArrayList<Edge>[] graph = unweightedDirectedGraph(v, e);
 		for ( int i = 0; i < v; i++ ) {
 			for ( int j = 0; j < graph[i].size(); i++ ) {
-				if( negativeWeight )
+				if ( negativeWeight )
 					graph[i].get(j).setW(getNegativeInt(-maxWeight, maxWeight));
 				else
 					graph[i].get(j).setW(getInt(0, maxWeight));
@@ -233,9 +245,43 @@ public class Generator {
 		}
 		return graph;
 	}
-	
-	
-	
-	
+
+	@Override
+	public ArrayList<Edge>[] unweightedGraph( int v, int e ) {
+		if ( v == 0 )
+			throw new IllegalArgumentException();
+		if ( e > ( v * ( v - 1 ) ) / 2 && v > 1 )
+			throw new MakeGraphException("E should be less or equal than ( v * ( v - 1 ) ) / 2 in NonDirectedGraphs");
+		if ( v == 1 && e > 0 )
+			throw new MakeGraphException("E should be 0 because v is 1");
+
+		ArrayList<Edge>[] graph = makeGraph(v);
+		HashSet<String> set = new HashSet<String>();
+		int a, b;
+		while ( e > 0 ) {
+			a = r.nextInt(v);
+			b = r.nextInt(v);
+			if ( !set.contains(a + " " + b) && a != b ) {
+				set.add(a + " " + b);
+				graph[a].add(new Edge(b));
+				e--;
+			}
+		}
+		
+		
+		return null;
+	}
+
+	@Override
+	public ArrayList<Edge>[] weightedGraph( int v, int e, int maxWeight, boolean negativeWeight ) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Edge>[] unweightedDirectedAcyclicGraph( int v ) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

@@ -12,6 +12,7 @@ public class UnionFind {
 			range[i] = 0;
 		}
 	}
+
 	public void union( int u, int v ) {
 		if ( u == v )
 			return;
@@ -27,6 +28,7 @@ public class UnionFind {
 			}
 		}
 	}
+
 	public int find( int u ) {
 		if ( father[u] == u )
 			return u;
